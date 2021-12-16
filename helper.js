@@ -61,6 +61,7 @@ function Email(token, email) {
   });
   const link = `http://localhost:3000/forgot-password/verify/${token}`;
   var mailOptions = {
+    from: process.env.EMAIL,
     to: email,
     subject: "Sending Email using Node.js",
     html: `<a href=${link}>
