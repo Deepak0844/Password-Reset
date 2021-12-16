@@ -59,7 +59,7 @@ function Email(token, email) {
       pass: process.env.PASSWORD,
     },
   });
-  const link = `http://localhost:3000/forgot-password/verify/${token}`;
+  const link = `https://authfrontend.herokuapp.com/forgot-password/verify/${token}`;
   var mailOptions = {
     from: process.env.EMAIL,
     to: email,
