@@ -61,8 +61,8 @@ function Email(token, email) {
   });
   const link = `http://localhost:3000/forgot-password/verify/${token}`;
   var mailOptions = {
-    from: process.env.EMAIL,
-    to: email,
+    from:process.env.EMAIL,
+    to:email,
     subject: "Sending Email using Node.js",
     html: `<a href=${link}>
     Click the link to reset the password
@@ -73,7 +73,7 @@ function Email(token, email) {
     if (error) {
       console.log(error);
     } else {
-      console.log("Email Sent Successfully" + info);
+      console.log("Email Sent Successfully");
     }
   });
 }
