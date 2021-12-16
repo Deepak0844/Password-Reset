@@ -8,9 +8,9 @@ import {
   updateUser,
   verifyUser,
   verifyToken,
+  Email,
 } from "../helper.js";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { auth } from "../middleware/auth.js";
 
@@ -117,13 +117,13 @@ router.route("/forgot-password").post(async (request, response) => {
   });
 });
 
-// After clicking the link in the email,which redirects to another page 
+// After clicking the link in the email,which redirects to another page
 router.route("/forgot-password/verify").get(async (request, response) => {
   // From the mail link the token was taken and it is placed in the header for further verification
   const token = await request.header("x-auth-token");
 
   const password = token;
-  console.log("password",password);
+  console.log("password", password);
 
   const tokenVerify = await verifyUser(password);
 
@@ -157,17 +157,14 @@ router.route("/change-password").post(async (request, response) => {
     // The user is again verified using the same token which was sent before
 
     if (!data) {
-      response
-        .status(401)
-        .send({
-          message:
-            "link has been expired Please go back to forget password page",
-        });
+      response.status(401).send({
+        message: "link has been expired Please go back to forget password page",
+      });
       return;
     }
     const { email } = data;
 
-    // after the necessary verification the password is encrypted 
+    // after the necessary verification the password is encrypted
     const hashedPassword = await genPassword(password);
 
     // After the generation of hashed password it will replace the token which is stored as a password
@@ -176,7 +173,7 @@ router.route("/change-password").post(async (request, response) => {
       password: hashedPassword,
     });
     const result = await getUserByEmail(email);
-console.log("result",result)
+    console.log("result", result);
     return response.send({ result, message: "Password Changed Successfully" });
   }
 });
@@ -185,29 +182,4 @@ router.route("/successful").get(auth, (request, response) => {
   response.send({ message: "Successfully Logged In" });
 });
 
-function Email(token, email) {
-  var transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL,
-      pass: process.env.PASSWORD,
-    },
-  });
-  const link = `http://localhost:3000/forgot-password/verify/${token}`;
-  var mailOptions = {
-    to: email,
-    subject: "Sending Email using Node.js",
-    html: `<a href=${link}>
-    Click the link to reset the password
-    </a>`,
-  };
-
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Email Sent Successfully");
-    }
-  });
-}
 export const authRouter = router;
