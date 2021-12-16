@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import { client } from "./index.js";
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
 
 async function genPassword(password) {
   const NO_OF_ROUNDS = 10; //difficulties
